@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: #f1f1f1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .login-container {
+      width: 350px;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .login-container img {
+      width: 180px;
+      border-radius: 50%;
+      margin-bottom: 20px;
+    }
+
+    .login-container input[type="text"],
+    .login-container input[type="password"] {
+      width: 100%;
+      padding: 12px 20px;
+      margin: 8px 0;
+      display: inline-block;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      border-radius: 5px;
+    }
+
+    .login-container button {
+      background-color: #04aa6d;
+      color: white;
+      padding: 14px 20px;
+      margin: 8px 0;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      border-radius: 5px;
+    }
+
+    .login-container button:hover {
+      opacity: 0.8;
+    }
+
+    .login-container label {
+      font-weight: bold;
+    }
+
+    .login-container span {
+      color: red;
+    }
+
+    .login-container .response-message {
+      margin-top: 10px;
+    }
+
+    @media screen and (max-width: 400px) {
+      .login-container {
+        width: 90%;
+      }
+    }
+    .image-center {
+        display: flex;
+        justify-content: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <div class="image-center">
+        <img src="./teacher-login.png" alt="Avatar" />
+    </div>
+    <h2 style="text-align: center;">teacher Login</h2>
+
+    <form id="loginForm" class="animate">
+      <div>
+        <label for="username">teacher Username</label>
+        <input type="text" placeholder="Enter Username" name="username" required />
+
+        <label for="password">Password</label>
+        <input type="password" placeholder="Enter Password" name="password" required />
+
+        <button type="submit" id="loginButton">Login</button>
+        <div class="response-message"></div>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.getElementById("loginForm");
+      const responseMessage = document.querySelector(".response-message");
+
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        const formData = new FormData(form);
+
+        fetch("login.php", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.error) {
+              responseMessage.innerHTML = "<span>" + data.error + "</span>";
+            } else if (data.success) {
+              responseMessage.innerHTML = "<span>" + data.success + "</span>";
+              window.location.href = "../classes/index.php";
+            }
+          })
+          .catch((error) => {
+            responseMessage.innerHTML = "<span>Error: " + error.message + "</span>";
+          });
+      });
+
+      form.addEventListener("input", function () {
+        document.getElementById("loginButton").disabled = !form.checkValidity();
+      });
+    });
+  </script>
+</body>
+</html>
